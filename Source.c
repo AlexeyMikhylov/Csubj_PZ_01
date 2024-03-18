@@ -40,6 +40,16 @@ int run(void)
         example7(); run();
     case 8:
         example8(); run();
+    case 9:
+        example9(); run();
+    case 10:
+        example10(); run();
+    case 11:
+        example11(); run();
+    case 12:
+        example12(); run();
+    case 13:
+        example13(); run();
     default:
         break;
     }
@@ -150,7 +160,7 @@ example4_2(void)
 }
 
 //strncpy(куда, откуда, сколько)
-//при копировании из строкив эту же строку, не должно быть пересечения
+//при копировании из строки в эту же строку, не должно быть пересечения
 int example5(void)
 {
     char word[] = "Aloha, Hawaii";
@@ -166,6 +176,7 @@ int example5(void)
     hawaii[7] = 0; //конец строки
 
     printf("\n%s\n%s\n", aloha, hawaii);
+    
     printf("\n%s, %s\n", aloha, hawaii);
 }
 
@@ -225,6 +236,7 @@ int example7(void)
     }
 }
 
+
 //поиск
 //memchr()
 int example8(void)
@@ -234,7 +246,7 @@ int example8(void)
 
     printf("%s\n", str);
 
-    ptr = (char*)memchr(str, '\0', 4000);
+    ptr = (char*)memchr(str, 'H', 4000);
 
     if (ptr != NULL)
     {
@@ -243,5 +255,97 @@ int example8(void)
     else
     {
         printf("no null byte in memory block");
+    }
+}
+
+//
+int example9(void)
+{
+    char str[] = "So if you want to love me\n"
+        "Then darling don't refrain\n"
+        "Or I'll just end up walking\n"
+        "In the cold November rain\n";
+    char vowels[] = "aeiouy";
+    
+    int i = 0;
+    while (str[i])
+    {
+        //printf("\n%d\n", i); printf("%d\n\n", strcspn(&str[i], vowels));
+        //strcspn начинает отсчет всегда с нуля
+
+        i = i + strcspn(&str[i], vowels);
+
+        printf("%d ", i);
+        i++;
+    }
+}
+
+//
+int example10(void)
+{
+    char str[] = "Cos' it's a bittersweet symphony this life...\n"
+        "Trying to make ends meet, you're a slave to the money then you die.";
+    char vowels[] = "aeiouy";
+    char* p = NULL;
+
+    p = strpbrk(str, vowels);
+
+    while (p)
+    {
+        printf("%c ", *p);
+        p++;
+        p = strpbrk(p, vowels);
+    }
+}
+
+//
+int example11(void)
+{
+    char str[] = "I'll drown my beliefs\n"
+        "To have you be in peace\n"
+        "I'll dress like your niece\n"
+        "And wash your swollen feet\n";
+    char niece[] = "niece";
+    char* p = strstr(str, niece);
+
+    printf("%s", p);
+}
+
+//
+int example12(void)
+{
+    char str[] = "on 21st of May";
+    char nums[] = "0123456789";
+    char number[10];
+
+    /* uintptr_t - целочисленный тип без знака, который может хранить указатель данных */
+    uintptr_t i;
+
+    //Определяем, где начинаются цифры
+    /* size_t - используется для индексации массива и подсчета циклов */
+    // целочисленный тип данных без знака
+    size_t start = strcspn(str, nums);
+
+    /* Определяем, где они заканчиваются, относительно start */
+    size_t end = strspn(&str[start], nums);
+    for (i = 0; i < end; i++)
+    {
+        printf("%c", str[start + i]);
+    }
+}
+
+//
+int example13(void)
+{
+    char str[] = "After working in India during the late 1970s and 1980s, "
+        "Shankar's profile in the West began to rise again in the mid-1990s "
+        "as his music found its way into club DJ sets, particularly in London.";
+    char delim[] = " \t\n\,.-";
+    char* p = strtok(str, delim);
+
+    while (p != NULL)
+    {
+        printf("%s\n", p);
+        p = strtok(NULL, delim);
     }
 }
