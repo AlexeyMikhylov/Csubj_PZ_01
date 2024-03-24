@@ -2,6 +2,7 @@
 #include <string.h>
 #include <conio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #define SIZE 10
 
@@ -53,9 +54,15 @@ int run(void)
     case 8:
         printf("\n");
         example8(); run();
-    case 9:
+    case 91:
         printf("\n");
-        example9(); run();
+        example9_1(); run();
+    case 92:
+        printf("\n");
+        example9_2(); run();
+    case 93:
+        printf("\n");
+        example9_3(); run();
     case 10:
         printf("\n");
         example10(); run();
@@ -235,45 +242,220 @@ int example6_1(void)
 }
 
 //сравнение строк
+//сортирует строки по алфавиту
+int cmp(const void* a, const void* b) {
+    return strncmp((char*)a, (char*)b, 3); // 3 - первые n букв, по которым происходит сортировка, т.е. например n = 2; МИ и МА отсортирует как МА и МИ
+}
+
 int example7(void)
 {
+    int i;
+    /*char words[5][79] = {
+        "Solar",
+        "Obscurus",
+        "Tempestus",
+        "Ultima",
+        "Pacificus"
+    };*/
 
+    char words[6][79] = {
+        "B_Solar",
+        "D_Obscurus",
+        "C_Tempestus",
+        "A_Ultima",
+        "A_Altima",
+        "E_Pacificus"
+    };
+
+    for (i = 0; i < 6; i++) {
+        printf("%s\n", words[i]);
+    }
+
+    qsort(words, 6, sizeof(words[0]), cmp); // Исправленный вариант
+
+    printf("\n");
+
+    for (i = 0; i < 6; i++) {
+        printf("%s\n", words[i]);
+    }
 }
 
 
-//поиск
-//memchr()
+//поиск - memchr()
+//задание: найти конец строки ('\0')
 int example8(void)
 {
+    char str[] = "Hello world!";
+    char* ptr = NULL;
+    char symbol = '\0';
+    
+    printf("string - %s\n\n", str);
 
+    ptr = (char*)memchr(str, symbol, strlen(str)+1);
+    //strlen(str)+1 - диапазон поиска вся строка
+
+    if (ptr != NULL)
+    {
+        printf("first '%c' have this address - %p", symbol, ptr);
+    }
+    else
+    {
+        printf("symbol not found");
+    }
+
+    //memchr() возвращает указатель на адрес найденного элемента,
+    //таким образом, длину строки можно найти таким образом:
+    printf("\n\nptr = %d, str = %d", ptr, str);
+    printf("\n\nlength of string (ptr-str) = %d", ptr - str);
+    printf("\n\nlength of string (strlen()) = %d", strlen(str));
 }
 
-//
-int example9(void)
+// strchr - поиск символа в строке
+// как memchr только работает конкретно со строками, а не с блоками памяти
+// задание: найти все гласные в строке
+//1ый споособ - strchr()
+int example9_1(void)
 {
+    char str[] = "So if you want to love me\n"
+                 "Then darling don't refrain\n"
+                 "Or I'll just end up walking\n"
+                 "In the cold November rain\n";
 
+    char vowels[] = "eyuioaEYUIOA";
+
+    printf("\nstring: %s\n", str);
+    
+    printf("Vowels in string:\n");
+
+    for (int i = 0; i < strlen(str); i++)
+    {
+        char* vowel = strchr(vowels, str[i]);
+        if (vowel != NULL)
+        {
+            printf("[%d] = %c \n", i, str[i]);  
+        }
+    }
 }
 
-//
+//2ой способ - strcspn()
+int example9_2(void)
+{
+    char str[] = "So if you want to love me\n"
+        "Then darling don't refrain\n"
+        "Or I'll just end up walking\n"
+        "In the cold November rain\n";
+
+    char vowels[] = "eyuioaEYUIOA";
+
+    printf("\nstring: %s\n", str);
+
+    printf("Vowels in string:\n");
+
+    for (int i = 0; i < strlen(str); i++)
+    {
+        if (strcspn(&str[i], vowels) == NULL)
+        {
+            printf("[%d] = %c\n", i, str[i]);
+        }
+    }
+}
+
+//3ий способ - strpbrk()
+int example9_3(void)
+{
+    char str[] = "So if you want to love me\n"
+        "Then darling don't refrain\n"
+        "Or I'll just end up walking\n"
+        "In the cold November rain\n";
+
+    char vowels[] = "eyuioaEYUIOA";
+    char* ptr = NULL;
+
+    printf("\nstring: %s\n", str);
+
+    printf("Vowels in string:\n");
+
+    ptr = strpbrk(str, vowels);
+
+    for (int i = 0; i < strlen(str); i++)
+    {
+        if (ptr)
+        {
+            printf("[%d] = %c\n", ptr-str, *ptr);
+            ptr++;
+            ptr = strpbrk(ptr, vowels);
+        }
+    }
+}
+
+//strrchr()
+// 
+//strspn(str1, str2) - возвращает длину участка строки str, который состоит только из символов строки str2
+//задание: вывести число, которое встречается в строке
 int example10(void)
 {
+    char str[] = "On 21st of May";
+    char nums[] = "1234567890";
 
+    int length = strcspn(str, nums);
+
+    printf("\n%s\n", str);
+
+    if (length > 0)
+    {
+        char number[10];
+
+        strncpy(number, str + length, length);
+
+        number[length-1] = '\0';
+        
+        printf("Number from string - %s", number);
+    }
+    else
+    {
+        puts("No numbers in string");
+    }
 }
 
-//
+//ctrstr()
 int example11(void)
 {
+    char str[] = "I'll drown my beliefs\n"
+                 "To have you be in peace\n"
+                 "I'll dress like your niece\n"
+                 "And wash your swollen feet\n";
 
+    char niece[] = "niece";
+
+    char* p = strstr(str, niece);
+    
+    printf("%s", p);
 }
 
-//
+//strtok(str1, str2) разбивает строку str1 на кусочки ("токены") ограниченные символами, входящими в строку str2
 int example12(void)
 {
-
+    char str[] = "After working in India during the late 1970s and 1980s, "
+                 "Shankar's profile in the West began to rise again in the mid-1990s "
+                 "as his music found its way into club DJ sets, particularly in London.";
+    
+    char delim[] = " \t\n\,.-";
+    char* p = strtok(str, delim); //разбили текст по словам
+    
+    //выводим текст по словам
+    while (p != NULL)
+    {
+        printf("%s\n", p);
+        p = strtok(NULL, delim);
+    }
 }
 
-//
+//sprintf() - как printf() только записывает в строку
 int example13(void)
 {
+    char str[16] = "Number is: ";
+    int number = 5;
 
+    sprintf(&str[11], "%d", number);
+    puts(str);
 }
