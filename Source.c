@@ -133,24 +133,65 @@ int example2(void)
     printf("\na = %.3f \nb = %.3f", a, b);
 }
 
-
+//
 int example3(void)
 {
-    char str[] = "abc def "
+    char str[] = "abc def ... .";
+    //...........[ a b c _ d e f _ . . .  _  . ]
+    // ..........[ 0 1 2 3 4 5 6 7 8 9 10 11 12] 
+    puts(str);
+
+    memmove(str + 8, str + 4, 3);
+    //...........[ a b c _ d e f _ |.| . .  _  . ]
+    // ..........[ 0 1 2 3 4 5 6 7 |8| 9 10 11 12] - str+8
+    // 
+    //...........[ a b c _ |d| e f _ . . .  _  . ]
+    // ..........[ 0 1 2 3 |4| 5 6 7 8 9 10 11 12] - str+4
+    // 
+    //...........[ a b c _ |d e f| _ . . .  _  . ]
+    // ..........[ 0 1 2 3 |4 5 6| 7 8 9 10 11 12] - 3 (от str+4 до str+6) ; (4,5,6) = 3
+    // 
+    //...........[ a b c _ |d e f| _ |d e f | _  . ]
+    // ..........[ 0 1 2 3 |4 5 6| 7 |8 9 10| 11 12] - memmove()
+
+    puts(str);
 }
 
+//копирование строки
 int example4_1(void)
 {
+    char str1[128];
+    char str2[128];
 
+    scanf("%127s", str1); //записываем данные в str1
+    printf("str1 = %s\n\n", str1);
+
+    strcpy(str2, str1); //копируем str1 в str2
+
+    printf("str2 = %s", str2);
 }
 
 example4_2(void)
 {
-
+    // то же, что 4_1, только результат записывается в еще одну строку
+    // str3 = strcpy(str2, str1)
 }
 
+//копирование n символов строки
 int example5(void)
 {
+    char str1[] = "Aloha, Hawaii";
+    char str2[16];
+    char str3[16];
+
+    printf("str1 = %s\n\n", str1);
+
+    strncpy(str2, str1, 5);     //копируем 5 символов str1, начиная с 0го, в str2
+    str2[5] = '\0';
+    strncpy(str3, str1 + 7, 7); //копируем 7 символов str1, начиная с 7го, в str2
+
+    printf("str2 = %s\n", str2);
+    printf("\nstr3 = %s", str3);
 }
 
 int example6(void)
