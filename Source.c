@@ -15,7 +15,7 @@ int run(void)
 {
     int number;
     printf("\n\nExamples [1..13]; 0 for exit\n");
-    printf("Input number : ");
+    printf("Input number: ");
     if (scanf("%d", &number) != NULL)
 
     switch (number)
@@ -44,6 +44,9 @@ int run(void)
     case 6:
         printf("\n");
         example6(); run();
+    case 61:
+        printf("\n");
+        example6_1(); run();
     case 7:
         printf("\n");
         example7(); run();
@@ -194,11 +197,34 @@ int example5(void)
     printf("\nstr3 = %s", str3);
 }
 
+//конкатенация строк (склеивание, сложение, присоединение)
 int example6(void)
 {
+    char str1[14] = "123456"; //str1 должна быть минимум в два раза больше str2
+    char str2[7] = "qwerty";
 
+    strcat(str1, str2);
+
+    puts(str1);
 }
 
+//strncat - присоединение n символов одной строки к другой
+//задание: присоединение половинки второй строки к первой
+int example6_1(void)
+{
+    char str1[20]; //str1 должна быть минимум в два раза больше str2
+    char str2[10];
+
+    scanf("%s", str1);
+    scanf("%s", str2);
+
+    strncat(str1, str2, strlen(str2) / 2);
+    //strlen() - возвращает длину строки
+
+    puts(str1);
+}
+
+//сравнение строк
 int example7(void)
 {
 
