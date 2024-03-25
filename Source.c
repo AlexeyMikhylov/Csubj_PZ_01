@@ -270,24 +270,25 @@ int example7(void)
         "Pacificus"
     };*/ //плохой пример, приведем по-лучше:
 
-    char words[6][79] = {
+    char words[7][79] = {
         "B_Solar",
         "D_Obscurus",
         "C_Tempestus",
         "A_Ultima",
         "A_Altima",
+        "A_Abtima",
         "E_Pacificus"
     };
 
-    for (i = 0; i < 6; i++) {
+    for (i = 0; i < 7; i++) {
         printf("%s\n", words[i]);
     }
 
-    qsort(words, 6, sizeof(words[0]), cmp); // Исправленный вариант
+    qsort(words, 7, sizeof(words[0]), cmp); // Исправленный вариант
 
     printf("\n");
 
-    for (i = 0; i < 6; i++) {
+    for (i = 0; i < 7; i++) {
         printf("%s\n", words[i]);
     }
 }
@@ -308,7 +309,7 @@ int example8(void)
 
     if (ptr != NULL)
     {
-        printf("first '%c' have this address - %p and this index - %d", symbol, ptr, ptr - str);
+        printf("first '%c' have this address - %p and this index - %d", symbol, ptr, ptr - &str[0]);
     }
     else
     {
@@ -317,7 +318,8 @@ int example8(void)
 
     //memchr() возвращает указатель на адрес найденного элемента,
     //таким образом, длину строки можно найти таким образом:
-    printf("\n\nptr = %d, str = %d", ptr, str);
+    printf("\n\nptr = %c, str = %c", *ptr, *&str[0]);
+    printf("\nptr = %d, str = %d", ptr, &str[0]);
     printf("\nlength of string (ptr-str) = %d", ptr - str);
     printf("\nlength of string (strlen()) = %d", strlen(str));
 }
@@ -410,7 +412,7 @@ int example10(void)
     char str[] = "On 21st of May";
     char nums[] = "1234567890";
 
-    int length = strcspn(str, nums);
+    int length = strcspn(str, nums); //3 {'2', '1', '\0'}
 
     printf("\n%s\n", str);
 
@@ -418,9 +420,9 @@ int example10(void)
     {
         char number[10];
 
-        strncpy(number, str + length, length);
+        strncpy(number, str + length, length); // копируем в number начиная с 3го символа строки str 3 символа (21s)
 
-        number[length-1] = '\0';
+        number[length-1] = '\0'; // 21\0
         
         printf("Number from string - %s", number);
     }
@@ -454,9 +456,11 @@ int example12(void)
                  "as his music found its way into club DJ sets, particularly in London.";
     
     char delim[] = " \t\n\,.-";
-    char* p = strtok(str, delim); //разбили текст по словам
+    char* p = strtok(str, delim);
+
+    printf("%s\n", p); //получаем первое слово - наш токен
     
-    //выводим текст по словам
+    //выводим текст по словам (по токенам)
     while (p != NULL)
     {
         printf("%s\n", p);
